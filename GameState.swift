@@ -15,6 +15,11 @@ class GameState: ObservableObject
         resetBoard()
     }
     
+    func turnText() -> String
+    {
+        return turn == Tile.Cross ? "Turn: X" : "Turn: O"
+    }
+    
     func placeTile(_ row: Int,_ column: Int)
     {
         if(board[row][column].tile != Tile.Empty)
@@ -23,7 +28,7 @@ class GameState: ObservableObject
         }
         board[row][column].tile = turn == Tile.Cross ? Tile.Cross : Tile.Nought
         
-        if (chechForVictory())
+        if (checkForVictory())
         {
             if(turn == Tile.Cross)
             {
@@ -33,15 +38,74 @@ class GameState: ObservableObject
             {
                 noughtsScore += 1
             }
+            let winner = turn == Tile.Cross ? "Crosses" : "Noughts"
+            alertMessage = winner + " Win!"
+            showAlert = true
         }
         else
         {
             turn = turn == Tile.Cross ? Tile.Nought : Tile.Cross
         }
+        
+        if (checkForDraw()) 
+        {
+            alertMessage = "Draw"
+            showAlert = true
+        }
     }
     
-    func chechForVictory() -> Bool {
+    func checkForVictory() -> Bool
+    {
+        for column in 0...2
+        {
+            if isTurnTile(0, column) && isTurnTile(1, column) && isTurnTile(2, column)
+            {
+                return true
+            }
+        }
+        
+        for row in 0...2
+        {
+            if isTurnTile(row, 0) && isTurnTile(row, 1) && isTurnTile(row, 2)
+            {
+                return true
+            }
+        }
+        
+        if isTurnTile(0, 0) && isTurnTile(1, 1) && isTurnTile(2, 2)
+        {
+            return true
+        }
+        
+        if isTurnTile(0, 2) && isTurnTile(1, 1) && isTurnTile(2, 0)
+        {
+            return true
+        }
+        
         return false
+    }
+    
+    func checkForDraw() -> Bool
+    {
+        for row in board
+        {
+            for cell in row
+            {
+                if cell.tile == Tile.Empty
+                {
+                    return false
+                }
+            }
+        }
+
+        return !checkForVictory()
+    }
+
+
+    
+    func isTurnTile(_ row: Int,_ column: Int) -> Bool
+    {
+        return board[row][column].tile == turn
     }
     
     func resetBoard()
