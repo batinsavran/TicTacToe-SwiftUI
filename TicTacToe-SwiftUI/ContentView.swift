@@ -8,6 +8,17 @@ struct ContentView: View {
     {
         let borderSize = CGFloat(5)
         
+        Text(gameState.turnText())
+            .font(.title)
+            .bold()
+            .padding()
+        Spacer()
+        
+        Text(String(format: "Crosses: %d", gameState.crossesScore))
+            .font(.title)
+            .bold()
+            .padding()
+        
         VStack(spacing: borderSize)
         {
             ForEach(0...2, id: \.self) 
@@ -25,7 +36,7 @@ struct ContentView: View {
                             .font(.system(size: 60))
                             .foregroundColor(cell.tileColor())
                             .bold()
-                            .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .aspectRatio(1, contentMode: .fit)
                             .background(Color.white)
                             .onTapGesture {
@@ -47,6 +58,12 @@ struct ContentView: View {
                 }
             )
         }
+        
+        Text(String(format: "Noughts: %d", gameState.noughtsScore))
+            .font(.title)
+            .bold()
+            .padding()
+        Spacer()
     }
 }
 
